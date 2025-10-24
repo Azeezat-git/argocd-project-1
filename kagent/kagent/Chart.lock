@@ -1,0 +1,42 @@
+dependencies:
+- name: kagent-tools
+  repository: oci://ghcr.io/kagent-dev/tools/helm
+  version: 0.0.12
+- name: grafana-mcp
+  repository: file://../tools/grafana-mcp
+  version: 0.6.21
+- name: querydoc
+  repository: file://../tools/querydoc
+  version: 0.6.21
+- name: k8s-agent
+  repository: file://../agents/k8s
+  version: 0.6.21
+- name: kgateway-agent
+  repository: file://../agents/kgateway
+  version: 0.6.21
+- name: istio-agent
+  repository: file://../agents/istio
+  version: 0.6.21
+- name: promql-agent
+  repository: file://../agents/promql
+  version: 0.6.21
+- name: observability-agent
+  repository: file://../agents/observability
+  version: 0.6.21
+- name: argo-rollouts-agent
+  repository: file://../agents/argo-rollouts
+  version: 0.6.21
+- name: helm-agent
+  repository: file://../agents/helm
+  version: 0.6.21
+- name: cilium-policy-agent
+  repository: file://../agents/cilium-policy
+  version: 0.6.21
+- name: cilium-manager-agent
+  repository: file://../agents/cilium-manager
+  version: 0.6.21
+- name: cilium-debug-agent
+  repository: file://../agents/cilium-debug
+  version: 0.6.21
+digest: sha256:32fb14a9c2c61bfe818ddbde37ebcf40c8220654866a346d71768b245cc906a0
+generated: "2025-10-21T19:01:54.094199932Z"
