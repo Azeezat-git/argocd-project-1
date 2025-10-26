@@ -1,0 +1,53 @@
+{{ if .Values.kagent.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent
+  namespace: {{ .Values.global.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: {{ .Values.global.project | default "default" }}
+  source:
+    repoURL: oci://ghcr.io/kagent-dev/kagent/helm/kagent
+    chart: kagent
+    targetRevision: {{ .Values.kagent.version }}
+    helm:
+      values: |
+        global:
+          namespace: {{ .Values.kagent.namespace | quote }}
+        
+        dashboard:
+          enabled: {{ .Values.kagent.dashboard.enabled }}
+        
+        # Enable only basic agents to avoid syntax issues
+        agents:
+          k8s-agent:
+            enabled: {{ .Values.kagent.agents.k8s_agent.enabled }}
+          helm-agent:
+            enabled: {{ .Values.kagent.agents.helm_agent.enabled }}
+          observability-agent:
+            enabled: {{ .Values.kagent.agents.observability_agent.enabled }}
+        
+        # Skip complex tools for now
+        tools:
+          querydoc:
+            enabled: {{ .Values.kagent.tools.querydoc.enabled }}
+        
+        resources:
+          requests:
+            memory: {{ .Values.kagent.resources.requests.memory | quote }}
+            cpu: {{ .Values.kagent.resources.requests.cpu | quote }}
+          limits:
+            memory: {{ .Values.kagent.resources.limits.memory | quote }}
+            cpu: {{ .Values.kagent.resources.limits.cpu | quote }}
+  destination:
+    server: {{ .Values.global.destination.server }}
+    namespace: {{ .Values.kagent.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{ end }}

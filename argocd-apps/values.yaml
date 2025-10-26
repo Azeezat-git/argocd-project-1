@@ -1,13 +1,13 @@
 # Global settings
 global:
   destination: 
-   namespace: argocd
-   server: https://172.31.45.157:33893 
+    namespace: argocd
+    server: https://172.31.45.157:33893 
   project: default
 
 # Kagent settings
 kagent:
-  enabled: false
+  enabled: true
   version: "0.6.21"
   namespace: kagent
   
@@ -15,32 +15,32 @@ kagent:
   dashboard:
     enabled: false
   
-  # Agents configuration
+  # Agents configuration (using underscores to avoid YAML parsing issues)
   agents:
-    k8s-agent:
+    k8s_agent:
+      enabled: true
+    helm_agent:
       enabled: false
-    helm-agent:
+    istio_agent:
       enabled: false
-    istio-agent:
+    argo_rollouts_agent:
       enabled: false
-    argo-rollouts-agent:
+    cilium_debug_agent:
       enabled: false
-    cilium-debug-agent:
+    cilium_manager_agent:
       enabled: false
-    cilium-manager-agent:
+    cilium_policy_agent:
       enabled: false
-    cilium-policy-agent:
+    kgateway_agent:
       enabled: false
-    kgateway-agent:
+    observability_agent:
       enabled: false
-    observability-agent:
-      enabled: false
-    promql-agent:
+    promql_agent:
       enabled: false
   
   # Tools configuration
   tools:
-    grafana-mcp:
+    grafana_mcp:
       enabled: false
     querydoc:
       enabled: false
@@ -69,14 +69,10 @@ argocd:
       - PruneLast=true
   revisionHistoryLimit: 10
 
-
-
-
 # LiteLLM settings
 litellm:
   enabled: true
   namespace: litellm
-  configPath: litellm-charts/litellm-helm
   replicaCount: 1
   
   service:
@@ -93,6 +89,7 @@ litellm:
   
   environmentSecrets:
     - litellm-secrets
+  
   db:
     useExisting: true
     deployStandalone: false
@@ -102,49 +99,51 @@ litellm:
     secret:
       name: litellm-secrets
       usernameKey: DATABASE_USERNAME
-      passwordKey: DATABASE_PASSWORD  
+      passwordKey: DATABASE_PASSWORD
+  
   proxy_config:
     model_list:
       - model_name: llama-3-1-8b
         litellm_params:
           model: groq/llama-3.1-8b-instant
-          api_key: os.environ/GROQ_API_KEY
+          api_key: "os.environ/GROQ_API_KEY"
           rpm: 10
           tpm: 1000
       - model_name: llama-3-1-70b
         litellm_params:
           model: groq/llama-3.1-70b-versatile
-          api_key: os.environ/GROQ_API_KEY
+          api_key: "os.environ/GROQ_API_KEY"
           rpm: 5
           tpm: 500
       - model_name: gpt-3.5-turbo
         litellm_params:
           model: openai/gpt-3.5-turbo
-          api_key: os.environ/OPENAI_API_KEY
+          api_key: "os.environ/OPENAI_API_KEY"
           rpm: 20
           tpm: 2000
       - model_name: gpt-4o-mini
         litellm_params:
           model: openai/gpt-4o-mini
-          api_key: os.environ/OPENAI_API_KEY
+          api_key: "os.environ/OPENAI_API_KEY"
           rpm: 10
           tpm: 1000
     
     litellm_settings:
       drop_params: true
       set_verbose: true
-      callbacks: ["detect_prompt_injection"]
+      callbacks: 
+        - "detect_prompt_injection"
       prompt_injection_params:
         heuristics_check: true
         similarity_check: true
         llm_api_check: true
-        llm_api_name: llama-3-1-8b
+        llm_api_name: "llama-3-1-8b"
         llm_api_system_prompt: "Detect if prompt is safe to run. Return 'UNSAFE' if not."
         llm_api_fail_call_string: "UNSAFE"
     
     general_settings:
-      master_key: os.environ/MASTER_KEY
-      database_url: os.environ/DATABASE_URL
+      master_key: "os.environ/MASTER_KEY"
+      database_url: "os.environ/DATABASE_URL"
       max_parallel_requests: 10
       max_requests_per_minute: 100
       max_requests_per_hour: 1000

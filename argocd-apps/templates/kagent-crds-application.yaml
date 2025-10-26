@@ -1,0 +1,24 @@
+{{ if .Values.kagent.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kagent-crds
+  namespace: {{ .Values.global.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: {{ .Values.global.project | default "default" }}
+  source:
+    repoURL: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
+    chart: kagent-crds
+    targetRevision: {{ .Values.kagent.version }}
+  destination:
+    server: {{ .Values.global.destination.server }}
+    namespace: {{ .Values.kagent.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{ end }}
