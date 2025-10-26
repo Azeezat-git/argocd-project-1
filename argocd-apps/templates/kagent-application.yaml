@@ -20,17 +20,33 @@ spec:
         dashboard:
           enabled: {{ .Values.kagent.dashboard.enabled }}
         
-        # Enable only basic agents to avoid syntax issues
+        # Only enable k8s-agent for stability
         agents:
           k8s-agent:
             enabled: {{ .Values.kagent.agents.k8s_agent.enabled }}
           helm-agent:
             enabled: {{ .Values.kagent.agents.helm_agent.enabled }}
+          istio-agent:
+            enabled: {{ .Values.kagent.agents.istio_agent.enabled }}
+          argo-rollouts-agent:
+            enabled: {{ .Values.kagent.agents.argo_rollouts_agent.enabled }}
+          cilium-debug-agent:
+            enabled: {{ .Values.kagent.agents.cilium_debug_agent.enabled }}
+          cilium-manager-agent:
+            enabled: {{ .Values.kagent.agents.cilium_manager_agent.enabled }}
+          cilium-policy-agent:
+            enabled: {{ .Values.kagent.agents.cilium_policy_agent.enabled }}
+          kgateway-agent:
+            enabled: {{ .Values.kagent.agents.kgateway_agent.enabled }}
           observability-agent:
             enabled: {{ .Values.kagent.agents.observability_agent.enabled }}
+          promql-agent:
+            enabled: {{ .Values.kagent.agents.promql_agent.enabled }}
         
-        # Skip complex tools for now
+        # Disable all tools
         tools:
+          grafana-mcp:
+            enabled: {{ .Values.kagent.tools.grafana_mcp.enabled }}
           querydoc:
             enabled: {{ .Values.kagent.tools.querydoc.enabled }}
         

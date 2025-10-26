@@ -13,12 +13,12 @@ kagent:
   
   # Dashboard settings
   dashboard:
-    enabled: false
+    enabled: true
   
   # Agents configuration (using underscores to avoid YAML parsing issues)
   agents:
     k8s_agent:
-      enabled: true
+      enabled: false
     helm_agent:
       enabled: false
     istio_agent:
