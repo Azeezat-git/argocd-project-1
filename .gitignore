@@ -1,1 +1,4 @@
 litellm-secrets.yaml
+image_updater/chai-app/secret-image-updater-git.yaml
+image_updater/chai-app/secret-image-updater-git.yaml
+*.secret*.yaml
