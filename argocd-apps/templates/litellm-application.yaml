@@ -1,0 +1,105 @@
+{{ if .Values.litellm.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: litellm
+  namespace: {{ .Values.global.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Azeezat-git/argocd-project-1.git
+    path: {{ .Values.litellm.configPath }}
+    targetRevision: main
+    helm:
+      values: |
+        replicaCount: {{ .Values.litellm.replicaCount }}
+        
+        service:
+          type: {{ .Values.litellm.service.type }}
+          port: {{ .Values.litellm.service.port }}
+        
+        resources:
+          requests:
+            memory: {{ .Values.litellm.resources.requests.memory }}
+            cpu: {{ .Values.litellm.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.litellm.resources.limits.memory }}
+            cpu: {{ .Values.litellm.resources.limits.cpu }}
+        
+        environmentSecrets:
+          - {{ index .Values.litellm.environmentSecrets 0 }}
+        
+        proxyConfigMap:
+          create: true
+          key: config.yaml
+        
+        proxy_config:
+          model_list:
+            - model_name: {{ .Values.litellm.proxy_config.model_list.[0].model_name }}
+              litellm_params:
+                model: {{ .Values.litellm.proxy_config.model_list.[0].litellm_params.model }}
+                api_key: {{ .Values.litellm.proxy_config.model_list.[0].litellm_params.api_key }}
+                rpm: {{ .Values.litellm.proxy_config.model_list.[0].litellm_params.rpm }}
+                tpm: {{ .Values.litellm.proxy_config.model_list.[0].litellm_params.tpm }}
+            - model_name: {{ .Values.litellm.proxy_config.model_list.[1].model_name }}
+              litellm_params:
+                model: {{ .Values.litellm.proxy_config.model_list.[1].litellm_params.model }}
+                api_key: {{ .Values.litellm.proxy_config.model_list.[1].litellm_params.api_key }}
+                rpm: {{ .Values.litellm.proxy_config.model_list.[1].litellm_params.rpm }}
+                tpm: {{ .Values.litellm.proxy_config.model_list.[1].litellm_params.tpm }}
+            - model_name: {{ .Values.litellm.proxy_config.model_list.[2].model_name }}
+              litellm_params:
+                model: {{ .Values.litellm.proxy_config.model_list.[2].litellm_params.model }}
+                api_key: {{ .Values.litellm.proxy_config.model_list.[2].litellm_params.api_key }}
+                rpm: {{ .Values.litellm.proxy_config.model_list.[2].litellm_params.rpm }}
+                tpm: {{ .Values.litellm.proxy_config.model_list.[2].litellm_params.tpm }}
+            - model_name: {{ .Values.litellm.proxy_config.model_list.[3].model_name }}
+              litellm_params:
+                model: {{ .Values.litellm.proxy_config.model_list.[3].litellm_params.model }}
+                api_key: {{ .Values.litellm.proxy_config.model_list.[3].litellm_params.api_key }}
+                rpm: {{ .Values.litellm.proxy_config.model_list.[3].litellm_params.rpm }}
+                tpm: {{ .Values.litellm.proxy_config.model_list.[3].litellm_params.tpm }}
+          
+          litellm_settings:
+            drop_params: {{ .Values.litellm.proxy_config.litellm_settings.drop_params }}
+            set_verbose: {{ .Values.litellm.proxy_config.litellm_settings.set_verbose }}
+            callbacks: {{ .Values.litellm.proxy_config.litellm_settings.callbacks }}
+            prompt_injection_params:
+              heuristics_check: {{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.heuristics_check }}
+              similarity_check: {{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.similarity_check }}
+              llm_api_check: {{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.llm_api_check }}
+              llm_api_name: {{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.llm_api_name }}
+              llm_api_system_prompt: "{{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.llm_api_system_prompt }}"
+              llm_api_fail_call_string: "{{ .Values.litellm.proxy_config.litellm_settings.prompt_injection_params.llm_api_fail_call_string }}"
+          
+          general_settings:
+            master_key: {{ .Values.litellm.proxy_config.general_settings.master_key }}
+            database_url: {{ .Values.litellm.proxy_config.general_settings.database_url }}
+            max_parallel_requests: {{ .Values.litellm.proxy_config.general_settings.max_parallel_requests }}
+            max_requests_per_minute: {{ .Values.litellm.proxy_config.general_settings.max_requests_per_minute }}
+            max_requests_per_hour: {{ .Values.litellm.proxy_config.general_settings.max_requests_per_hour }}
+            database_connection_pool_limit: {{ .Values.litellm.proxy_config.general_settings.database_connection_pool_limit }}
+            database_connection_timeout: {{ .Values.litellm.proxy_config.general_settings.database_connection_timeout }}
+            store_model_in_db: {{ .Values.litellm.proxy_config.general_settings.store_model_in_db }}
+            store_prompts_in_spend_logs: {{ .Values.litellm.proxy_config.general_settings.store_prompts_in_spend_logs }}
+            key_management_system: "{{ .Values.litellm.proxy_config.general_settings.key_management_system }}"
+            key_management_settings:
+              primary_secret_name: "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.primary_secret_name }}"
+              access_mode: "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.access_mode }}"
+              hosted_keys:
+                - "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.hosted_keys.[0] }}"
+                - "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.hosted_keys.[1] }}"
+                - "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.hosted_keys.[2] }}"
+                - "{{ .Values.litellm.proxy_config.general_settings.key_management_settings.hosted_keys.[3] }}"
+  destination:
+    server: {{ .Values.global.destination.server }}
+    namespace: {{ .Values.litellm.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+{{ end }}
