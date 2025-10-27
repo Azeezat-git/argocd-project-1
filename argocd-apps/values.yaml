@@ -95,7 +95,7 @@ litellm:
     deployStandalone: false
     endpoint: "llm-pg.cjusigge0667.eu-west-1.rds.amazonaws.com"
     database: "litellmdb"
-    url: "postgresql://postgres:litellm-db@llm-pg.cjusigge0667.eu-west-1.rds.amazonaws.com:5432/litellmdb"
+    url: "postgresql://postgres:litellm-db@llm-pg.cjusigge0667.eu-west-1.rds.amazonaws.com:5432/litellmdb?sslmode=require"
     secret:
       name: litellm-secrets
       usernameKey: DATABASE_USERNAME
